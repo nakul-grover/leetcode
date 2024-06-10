@@ -1,33 +1,31 @@
 class Solution {
 public:
-    int n;
-    int dp[501][502][26];
-    int solve(vector<int>& nums, int k, int prev, int i){
-        if(k < 0)
-            return -1e9;
-        if(i >= n)
+    
+    int solve(int i,int k,vector<int>&nums,vector<vector<int>>&dp){
+        if(i==nums.size()){
             return 0;
-            
-        if(dp[i][prev+1][k] != -1)
-            return dp[i][prev+1][k];
-        
-        int take = 0;
-        if((prev ==-1 || nums[prev] == nums[i])){
-            take= 1 + solve(nums, k, i, i+1);
         }
-        else{
-            take = 1 + solve(nums, k-1, i, i+1);
+        if(dp[i][k]!=-1){
+            return dp[i][k];
         }
-        int not_take = solve(nums, k, prev, i+1);
-
-        return dp[i][prev+1][k] = max(take, not_take);
-
+        int maxLen = 1;
+        for(int j=i-1;j>=0;j--){
+            if(nums[i]==nums[j]){
+                maxLen =max(maxLen,1+solve(j,k,nums,dp));
+            }
+            else if(nums[i]!=nums[j] && k>0){
+                maxLen =max(maxLen,1+solve(j,k-1,nums,dp));
+            }
+        }
+        return dp[i][k]=maxLen;
     }
-
     int maximumLength(vector<int>& nums, int k) {
-        n = nums.size();
-        memset(dp, -1, sizeof(dp));
-
-        return solve(nums, k, -1, 0);
+        int maxLen=0;
+        int n=nums.size();
+        vector<vector<int>>dp(n+1,vector<int>(min(n+1,26),-1));
+        for(int i=0;i<n;i++){
+            maxLen=max(maxLen,solve(i,k,nums,dp));
+            }
+        return maxLen;
     }
 };
