@@ -20,10 +20,9 @@ public:
                 tempProfit = max(nums[j].second,tempProfit);
                 j++;
             }
-            if(j>0 && nums[j-1].first <= worker[i])
-            {
+
                 maxProfit = maxProfit + tempProfit;
-            }
+            
         }
         return maxProfit;
     }
