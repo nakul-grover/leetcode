@@ -31,10 +31,10 @@ private:
         }
         bool left=false;
         bool right=false;
-        if(root->left&&head->next&&root->left->val==head->next->val){
+        if(root->left&&head->next){
             left=check(head->next,root->left);
         }
-        if(root->right&&head->next&&root->right->val==head->next->val){
+        if(root->right&&head->next){
             right=check(head->next,root->right);
         }
         return left|right;
