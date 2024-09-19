@@ -1,6 +1,12 @@
 class Solution {
 public:
+    unordered_map<string, vector<int>> memo;
+
     vector<int> solve(string s) {
+        if (memo.find(s) != memo.end()) {
+            return memo[s];
+        }
+
         vector<int> ans;
 
         for (int i = 0; i < s.size(); i++) {
@@ -23,9 +29,10 @@ public:
         }
 
         if (ans.empty()) {
-            ans.push_back(stoi(s));  
+            ans.push_back(stoi(s));
         }
 
+        memo[s] = ans;
         return ans;
     }
 
