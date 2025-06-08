@@ -1,46 +1,43 @@
 class Solution {
 public:
     bool isNStraightHand(vector<int>& hand, int groupSize) {
-        if(hand.size()%(groupSize)!=0){
-            return false;
+        unordered_map<int, int> m;
+        for (int i = 0; i < hand.size(); i++) {
+            m[hand[i]]++;
         }
-        int n=hand.size();
-        unordered_map<int,int>m;
-        sort(hand.begin(),hand.end());
-        int badIndex=-1;
-        int count=0;
-        int prev=-1;
-        int ans=0;
-        int i=0;
-        while(i<n){
-            if((count==0) || (hand[i]==prev+1 && m.find(i)==m.end())){
-                prev=hand[i];
-                count++;
-                m[i]=1;
-                cout<<i<<endl;
-            }
-            else if(badIndex==-1 && m.find(i)== m.end()){
-                badIndex=i;
-                cout<<badIndex<<"badIndex"<<i<<endl;
-            }
-            if(count==groupSize){
-               count=0;
-                cout<<count<<" "<<i<<""<<badIndex<<endl;
-                if(badIndex!=-1){
-                    i=badIndex;
-                    badIndex=-1;
-                    continue;
+        priority_queue<pair<int, int>, vector<pair<int, int>>,
+                       greater<pair<int, int>>>
+            pq;
+        for (auto i : m) {
+            pq.push({i.first, i.second});
+        }
+
+        while (!pq.empty()) {
+            vector<pair<int, int>> temp;
+            int prev = -1;
+            for (int i = 0; i < groupSize; i++) {
+                if (!pq.empty()) {
+                    pair<int, int> front = pq.top();
+                    pq.pop();
+                    if (prev != -1 && prev + 1 != front.first) {
+                        return false;
+                    }
+                    prev = front.first;
+
+                    front.second = front.second - 1;
+                    temp.push_back(front);
                 }
             }
-                i++;
-            
-            
+            if(temp.size() != groupSize){
+                return false;
+            }
+            for (int i = 0; i < temp.size(); i++) {
+                if (temp[i].second != 0) {
+                    pq.push(temp[i]);
+                }
+            }
         }
-        if(count==0){
-            return true;
-        }
-        return false;
 
-        
+        return true;
     }
 };
