@@ -1,16 +1,21 @@
 class Solution {
 public:
-     int res=0;
-     int height(TreeNode* root){
-     if(root==NULL)
-     return 0;
-     int lh=height(root->left);
-     int rh=height(root->right);
-     res=max(res,lh+rh+1);
-     return 1+max(rh,lh);
- }
+    pair<int,int> solve(TreeNode* root){
+        if(!root){
+            return {0, 0};
+        }
+
+        pair<int,int> left = solve(root->left);
+        pair<int,int> right = solve(root->right);
+
+        int currentHeight = 1 + max(left.second, right.second);
+        int diameterThroughRoot = left.second + right.second;
+        int maxDiameter = max({left.first, right.first, diameterThroughRoot});
+
+        return {maxDiameter, currentHeight};
+    }
+
     int diameterOfBinaryTree(TreeNode* root) {
-        height(root);
-        return res-1;
+        return solve(root).first;
     }
 };
