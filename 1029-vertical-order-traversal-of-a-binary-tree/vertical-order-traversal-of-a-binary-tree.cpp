@@ -1,44 +1,36 @@
-/**
- * Definition for a binary tree node.
- * struct TreeNode {
- *     int val;
- *     TreeNode *left;
- *     TreeNode *right;
- *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
- *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
- *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
- * };
- */
 class Solution {
 public:
     vector<vector<int>> verticalTraversal(TreeNode* root) {
-        map<int,map<int,multiset<int>>>mp;
-        queue<pair<TreeNode*,pair<int,int>>>q;
-        q.push({root,{0,0}});
-        while(!q.empty()){
+        map<int, map<int, multiset<int>>> m;
+        queue<pair<TreeNode*, pair<int, int>>> q;
+        q.push({root, {0, 0}});
+        while (!q.empty()) {
             int size = q.size();
-            for(int i=0;i<size;i++){
-                pair<TreeNode*,pair<int,int>>p = q.front();
+            for (int i = 0; i < size; i++) {
+                pair<TreeNode*, pair<int, int>> front = q.front();
                 q.pop();
-                TreeNode * node = p.first;
-                int lvl = p.second.first;
-                int hd = p.second.second;
-                mp[hd][lvl].insert(node->val);
-                if(node->left){
-                    q.push({node->left,{lvl+1,hd-1}});
+                TreeNode* node = front.first;
+                int hd = front.second.first;
+                int vd = front.second.second;
+                m[hd][vd].insert(front.first->val);
+                if (node->left) {
+                    q.push({node->left, {hd - 1, vd + 1}});
                 }
-                if(node->right){
-                    q.push({node->right,{lvl+1,hd+1}});
+                if (node->right) {
+                    q.push({node->right, {hd + 1, vd + 1}});
                 }
             }
         }
-       vector<vector<int>> ans;
-        for(auto q:mp){
-            vector<int> col;
-            for(auto p:q.second){
-                col.insert(col.end(),p.second.begin(),p.second.end());
+
+        vector<vector<int>> ans;
+        for (auto i : m) {
+            vector<int> temp;
+            for (auto j : i.second) {
+                for (int val : j.second) {
+                    temp.push_back(val);
+                }
             }
-            ans.push_back(col);
+            ans.push_back(temp);
         }
         return ans;
     }
