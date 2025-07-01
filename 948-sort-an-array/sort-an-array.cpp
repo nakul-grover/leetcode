@@ -1,56 +1,43 @@
 class Solution {
 public:
-
-   
-    void merge(vector<int>&nums,int start,int mid,int end){
-
-        int n1 = mid-start+1;
-        int n2 = end - mid;
-
-        vector<int>nums1(n1);
-        vector<int>nums2(n2);
-
-
-        for(int i=0;i<n1;i++){
-            nums1[i] = nums[start+i];
-        }
-        for(int i=0;i<n2;i++){
-            nums2[i] = nums[mid+1+i];
-        }
-        
-        int i = 0;
-        int j = 0;
-        int k = start;
-
-        while(i<n1 && j<n2){
-            if(nums1[i] >= nums2[j]){
-                nums[k++] = nums2[j++];
-            }
-            else{
-                nums[k++] = nums1[i++];
+    void merge(vector<int>& nums, int low, int mid, int high) {
+        vector<int> temp;
+        int i = low;
+        int j = mid + 1;
+        while (i <= mid && j <= high) {
+            if (nums[i] >= nums[j]) {
+                temp.push_back(nums[j]);
+                j++;
+            } else {
+                temp.push_back(nums[i]);
+                i++;
             }
         }
-
-        while(i<n1){
-            nums[k++] = nums1[i++];
+        while (i <= mid) {
+            temp.push_back(nums[i]);
+            i++;
         }
-
-        while(j<n2){
-            nums[k++] = nums2[j++];
+        while (j <= high) {
+            temp.push_back(nums[j]);
+            j++;
+        }
+        for(int k=low;k<=high;k++){
+            nums[k] = temp[k-low];
         }
     }
-
-    void mergeSort(vector<int>&nums,int start,int end){
-        if(start<end){
-           int mid = start + (end-start)/2;
-           mergeSort(nums,start,mid);
-           mergeSort(nums,mid+1,end);
-           merge(nums,start,mid,end);
+  
+    void mergeSort(vector<int>& nums, int low, int high) {
+        if (low >= high) {
+            return;
         }
-        return;
+        int mid = low + (high - low) / 2;
+        mergeSort(nums, low, mid);
+        mergeSort(nums, mid + 1, high);
+        merge(nums, low, mid, high);
     }
     vector<int> sortArray(vector<int>& nums) {
-        mergeSort(nums,0,nums.size()-1);
+        int n = nums.size() - 1;
+        mergeSort(nums, 0, n);
         return nums;
     }
 };
