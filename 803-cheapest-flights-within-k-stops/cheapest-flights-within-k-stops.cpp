@@ -21,7 +21,7 @@ public:
             for(auto iter: v[node]){
                 int adjnode=iter.first;
                 int edn=iter.second;
-                if(cost+edn<dist[adjnode] && stops<=k){
+                if(cost+edn<dist[adjnode]){
                     dist[adjnode]=cost+edn;
                     q.push({stops+1,{adjnode,cost+edn}});
                 }
