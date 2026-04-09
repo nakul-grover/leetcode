@@ -1,42 +1,39 @@
 class Solution {
 public:
     string decodeString(string s) {
-        stack<int> numStack;
-        stack<string> strStack;
+        int i = 0;
+        return helper(s, i);
+    }
 
-        string currStr = "";
+    string helper(string &s, int &i) {
+        string result = "";
         int num = 0;
 
-        for (char c : s) {
-            if (isdigit(c)) {
-                num = num * 10 + (c - '0');
+        while (i < s.size()) {
+            if (isdigit(s[i])) {
+                num = num * 10 + (s[i] - '0');
+                i++;
             }
-            else if (c == '[') {
-                numStack.push(num);
-                strStack.push(currStr);
+            else if (s[i] == '[') {
+                i++;
+                string temp = helper(s, i);
 
-                num = 0;
-                currStr = "";
-            }
-            else if (c == ']') {
-                int repeat = numStack.top(); 
-                numStack.pop();
-                
-                string prevStr = strStack.top(); 
-                strStack.pop();
-
-                string temp = "";
-                for (int i = 0; i < repeat; i++) {
-                    temp += currStr;
+                while (num--) {
+                    result += temp;
                 }
 
-                currStr = prevStr + temp;
+                num = 0;
+            }
+            else if (s[i] == ']') {
+                i++;
+                return result;
             }
             else {
-                currStr += c;
+                result += s[i];
+                i++;
             }
         }
 
-        return currStr;
+        return result;
     }
 };
